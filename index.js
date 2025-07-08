@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const bodyParser = require("body-parser");
+const pool = require('./config/database');
 
 
 
@@ -19,8 +20,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.json({ message: 'API is working!' });
+app.get("/", async(req, res) => {
+  // res.json({ message: 'API is working!' });
+  const result = await pool.query('SELECT NOW()');
+  res.json({ dbTime: result.rows[0].now });
 })
 
 
