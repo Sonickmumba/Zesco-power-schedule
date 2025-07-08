@@ -1,0 +1,26 @@
+{
+  "name": "zesco-power-schedule",
+  "version": "1.0.0",
+  "description": "<a name=\"readme-top\"></a>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sonickmumba/Zesco-power-schedule.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sonickmumba/Zesco-power-schedule/issues"
+  },
+  "homepage": "https://github.com/Sonickmumba/Zesco-power-schedule#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
