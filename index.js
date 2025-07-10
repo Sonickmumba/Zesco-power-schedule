@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const bodyParser = require("body-parser");
-const pool = require('./config/database');
+const pool = require('./models/database');
 
 
 
