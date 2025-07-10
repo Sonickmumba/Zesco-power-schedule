@@ -1,4 +1,4 @@
-const pool = require('./db');
+const pool = require('./database');
 
 const Schedule = {
   // Get outages for a town
