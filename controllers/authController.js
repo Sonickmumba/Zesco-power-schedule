@@ -8,16 +8,17 @@ const pool = require("../models/database");
 
 exports.signup = async (req, res) => {
   const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password } = req.body;
+  const { name, email, password_hash } = req.body;
 
   // Strong password validation
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#_])[A-Za-z\d@$!%*?&#_]{8,}$/;
-  if (!passwordRegex.test(password)) {
+  if (!passwordRegex.test(password_hash)) {
     return res.status(400).json({
       message:
         "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character",
@@ -36,30 +37,30 @@ exports.signup = async (req, res) => {
       return res.status(409).send("User already exists");
     }
 
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashPassword(password_hash);
 
     const { rows } = await pool.query(
-      "INSERT INTO users (name, email, password_hash) VALUES ($1, $2) RETURNING id",
+      "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id",
       [name, email, hashedPassword]
     );
     const token = generateToken(rows[0].id);
 
     // Auto-login after signup
-    req.login(rows[0], (err) => {
-      if (err) {
-        console.error("Error logging in user after signup:", err);
-        return res.status(500).json({ message: "Internal server error" });
-      }
+    // req.login(rows[0], (err) => {
+    //   if (err) {
+    //     console.error("Error logging in user after signup:", err);
+    //     return res.status(500).json({ message: "Internal server error" });
+    //   }
 
-      res.status(201).json({
-        success: true,
-        message: "Signup successful, user logged in",
-        user: rows[0],
-        token: token
-      });
-    });
+    //   res.status(201).json({
+    //     success: true,
+    //     message: "Signup successful, user logged in",
+    //     user: rows[0],
+    //     token: token
+    //   });
+    // });
 
-    // res.status(201).json({ token });
+    res.status(201).json({ token });
   } catch (err) {
     console.error(err);
     res.status(500).send("Error registering user.");
@@ -68,16 +69,16 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password_hash } = req.body;
     const { rows } = await pool.query('SELECT id, password_hash FROM users WHERE email = $1', [email]);
 
     if (!rows.length) {
       return res.status(400).send('Invalid password or email');
     }
 
-    const isValidPassword = await comparePasswords(password, rows[0].password_hash);
+    const isValidPassword = await comparePasswords(password_hash, rows[0].password_hash);
 
-    if (!isValid) {
+    if (!isValidPassword) {
       return res.status(400).send('Invalid email or password.');
     }
 
