@@ -6,6 +6,7 @@ const pool = require('./models/database');
 
 const chatRoutes = require('./routes/chatRoutes')
 const scheduleRoutes = require('./routes/scheduleRoutes');
+const authRoutes =require('./routes/authRoutes')
 
 
 
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/chats', chatRoutes);
 app.use('/schedules', scheduleRoutes);
+app.use('/auth', authRoutes);
 
 app.get("/", async(req, res) => {
   // res.json({ message: 'API is working!' });
