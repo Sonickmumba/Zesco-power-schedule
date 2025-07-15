@@ -1,4 +1,5 @@
 const { verifyToken } = require('../utils/jwt');
+const pool = require('../models/database')
 
 const isAdmin = async (req, res, next) => {
   // First verify JWT
