@@ -28,6 +28,11 @@ const Chat = {
       [locationId]
     );
     return rows[0]?.id;
+  },
+
+  deleteMessage: async (messageId) => {
+    const { rows } = await pool.query("DELETE FROM messages WHERE id = $1 RETURNING *", [messageId]);
+    return rows[0];
   }
 };
 
