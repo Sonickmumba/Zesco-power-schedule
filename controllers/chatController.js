@@ -29,3 +29,19 @@ exports.sendMessage = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const { message_id } = req.params;
+    const remainingMessages = await Chat.deleteMessage(message_id);
+
+    if (!remainingMessages) {
+      return res.status(404).send('Message not found');
+    }
+
+    res.status(200).json({ message: 'Message deleted.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+}
